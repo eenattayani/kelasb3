@@ -29,9 +29,14 @@
                     <x-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                         {{ __('Daftar Siswa') }}
                     </x-nav-link>
+                    @auth
+                    @if(auth()->user()->role === 'parent')
                     <x-nav-link :href="route('parent.payments')" :active="request()->routeIs('parent.*')">
                         {{ __('Iuran Siswa') }}
                     </x-nav-link>
+                    @endif
+                    @endauth
+
                 </div>
             </div>
 
@@ -87,23 +92,28 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
-        @auth
+            @auth
             @if(auth()->user()->role === 'admin')
-            <x-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
+            <x-responsive-nav-link :href="route('payments.index')" :active="request()->routeIs('payments.*')">
                 {{ __('Pembayaran') }}
-            </x-nav-link>
+            </x-responsive-nav-link>
             @endif
-        @endauth
-            <x-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.*')">
+            @endauth
+            <x-responsive-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.*')">
                 {{ __('Pengeluaran') }}
-            </x-nav-link>
-            <x-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                 {{ __('Daftar Siswa') }}
-            </x-nav-link>
-            <x-nav-link :href="route('parent.payments')" :active="request()->routeIs('parent.*')">
+            </x-responsive-nav-link>
+            @auth
+            @if(auth()->user()->role === 'parent')
+            <x-responsive-nav-link :href="route('parent.payments')" :active="request()->routeIs('parent.*')">
                 {{ __('Iuran Siswa') }}
-            </x-nav-link>
+            </x-responsive-nav-link>
+            @endif
+            @endauth
         </div>
+        
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
