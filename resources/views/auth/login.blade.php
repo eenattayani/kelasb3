@@ -9,7 +9,7 @@
 
             <div class="mb-6 text-center">
                 <h1 class="text-2xl font-bold text-gray-800">Login ke Sistem</h1>
-                <p class="text-gray-500 text-sm mt-1">Silakan masuk untuk melanjutkan</p>
+                <p class="text-gray-500 text-sm mt-1">Silakan login untuk melanjutkan</p>
             </div>
 
             <!-- Session Status -->
