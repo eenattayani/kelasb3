@@ -114,5 +114,29 @@ class InitialSeeder extends Seeder
                 );
             }
         }
+
+        $year = $year + 1;
+
+        for ($month=1; $month<=12; $month++) {
+            $first = Carbon::create($year, $month, 1);
+            $last  = $first->copy()->endOfMonth();
+
+            $buckets = []; // week_of_month => ['start'=>Carbon, 'end'=>Carbon]
+            for ($d = $first->copy(); $d->lte($last); $d->addDay()) {
+                $w = $d->weekOfMonth; // 1..5
+                if (!isset($buckets[$w])) $buckets[$w] = ['start'=>$d->copy(), 'end'=>$d->copy()];
+                else $buckets[$w]['end'] = $d->copy();
+            }
+            foreach ($buckets as $w => $range) {
+                FeeWeek::updateOrCreate(
+                    ['year'=>$year,'month'=>$month,'week_of_month'=>$w],
+                    [
+                        'start_date'=>$range['start']->toDateString(),
+                        'end_date'=>$range['end']->toDateString(),
+                        'due_amount'=>config('komite.weekly_fee', 2000)
+                    ]
+                );
+            }
+        }
     }
 }
