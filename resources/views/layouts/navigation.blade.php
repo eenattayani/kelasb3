@@ -100,7 +100,7 @@
             @endif
             @endauth
             <x-responsive-nav-link :href="route('transactions.index')" :active="request()->routeIs('transactions.*')">
-                {{ __('Pengeluaran') }}
+                {{ __('Transaksi') }}
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('students.index')" :active="request()->routeIs('students.*')">
                 {{ __('Daftar Siswa') }}
