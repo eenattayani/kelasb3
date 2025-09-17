@@ -37,7 +37,9 @@
                             {{ $student->nama }}
                         </a>
                     </td>
-                    <td class="px-4 py-2 border text-center">{{ $student->parent_id }}</td>
+                    {{-- tampilkan nama dari user --}}
+                    <td class="px-4 py-2 border text-center">{{ $student->parent->name ?? 'N/A' }}</td>                    
+                    {{-- <td class="px-4 py-2 border text-center">{{ $student->parent_id }}</td> --}}
                     <td class="px-4 py-2 border text-center">{{ $student->kelas }}</td>
                     <td class="px-4 py-2 border text-center">
                         Rp{{ number_format($student->payments_sum_amount ?? 0, 0, ',', '.') }}
@@ -45,12 +47,13 @@
                   @auth
                     @if(auth()->user()->role === 'admin')
                     <td class="px-4 py-2 border space-x-2 text-center">
-                        <a href="{{ route('students.edit', $student) }}" class="text-blue-600">Edit</a>
+                        {{-- <a href="{{ route('students.edit', $student) }}" class="text-blue-600 cursor-not-allowed">Edit</a> --}}
+                        <a href="#" class="text-blue-600 cursor-not-allowed">Edit</a>
                         <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline"
                               onsubmit="return confirm('Yakin hapus?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-600">Hapus</button>
+                            <button type="submit" class="text-red-600" disabled>Hapus</button>
                         </form>
                     </td>
                     @endif
