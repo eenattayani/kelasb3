@@ -63,7 +63,7 @@
 
             {{-- Daftar Pengeluaran --}}
             <div class="bg-white shadow rounded-xl p-6">
-                <h3 class="text-lg font-semibold mb-4 text-gray-800">Daftar Pengeluaran</h3>
+                <h3 class="text-lg font-semibold mb-4 text-gray-800">Daftar Transaksi</h3>
                 <div class="overflow-x-auto">
                     <table class="w-full border border-gray-200 rounded-lg">
                         <thead class="bg-gray-100 text-gray-700">
