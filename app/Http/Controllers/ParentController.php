@@ -20,7 +20,12 @@ class ParentController extends Controller
             $students = $students->where('id', $studentId);
         }
 
-        $weeks = FeeWeek::where('year',$year)->where('month',$month)->orderBy('week_of_month')->get();
+        // $weeks = FeeWeek::where('year',$year)->where('month',$month)->orderBy('week_of_month')->get();
+        $weeks = FeeWeek::where('year', $year)
+                ->where('month', $month)
+                ->where('due_amount', '>', 0)
+                ->orderBy('week_of_month')
+                ->get();
 
         $payments = Payment::whereIn('student_id', $students->pluck('id'))
                     ->whereIn('fee_week_id', $weeks->pluck('id'))
