@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\{Student,Feeweek,Payment};
+use App\Models\{Student,FeeWeek,Payment};
 use Illuminate\Http\Request;
 
 class ParentController extends Controller
