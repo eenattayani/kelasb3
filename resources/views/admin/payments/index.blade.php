@@ -1,6 +1,13 @@
 <x-app-layout>
     <div class="max-w-7xl mx-auto p-6">
-        <h1 class="text-2xl font-semibold mb-6">📊 Pembayaran Iuran</h1>
+        {{-- <h1 class="text-2xl font-semibold mb-6">📊 Pembayaran Iuran</h1> --}}
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-semibold">📊 Pembayaran Iuran</h1>
+            <a href="{{ route('feeweeks.index') }}"
+            class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200">
+            ⚙️ Atur Pekan
+            </a>
+        </div>
 
         {{-- Filter bulan/tahun --}}
         <form method="get" class="flex items-center gap-3 mb-6">
@@ -13,6 +20,8 @@
                 Terapkan
             </button>
         </form>
+
+        
 
         {{-- Tabel pembayaran --}}
         <div class="overflow-x-auto rounded-xl shadow border border-gray-200 bg-white">
@@ -51,18 +60,22 @@
                                                 class="text-xs text-red-600 hover:underline">Hapus</button>
                                         </form>
                                     @else
-                                        <form action="{{ route('payments.store') }}" method="post">
-                                            @csrf
-                                            <input type="hidden" name="student_id" value="{{ $s->id }}">
-                                            <input type="hidden" name="fee_week_id" value="{{ $w->id }}">
-                                            <button
-                                                class="px-2 py-1 text-xs rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
-                                                Tandai Lunas <br>
-                                                <span class="font-semibold">
-                                                    Rp{{ number_format($w->due_amount, 0, ',', '.') }}
-                                                </span>
-                                            </button>
-                                        </form>
+                                        @if ($w->due_amount > 0)
+                                            <form action="{{ route('payments.store') }}" method="post">
+                                                @csrf
+                                                <input type="hidden" name="student_id" value="{{ $s->id }}">
+                                                <input type="hidden" name="fee_week_id" value="{{ $w->id }}">
+                                                <button
+                                                    class="px-2 py-1 text-xs rounded bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition">
+                                                    Tandai Lunas <br>
+                                                    <span class="font-semibold">
+                                                        Rp{{ number_format($w->due_amount, 0, ',', '.') }}
+                                                    </span>
+                                                </button>
+                                            </form>
+                                        @else
+                                            <span class="font-semibold text-gray-400">Rp 0</span>
+                                        @endif
                                     @endif
                                 </td>
                             @endforeach

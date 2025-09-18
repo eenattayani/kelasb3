@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\{
     StudentController, PaymentController, ExpenseController,
+    FeeWeekController,
     OtherIncomeController, ReportController, ParentController,
     TransactionController
 };
@@ -22,6 +23,8 @@ Route::middleware(['auth','role:admin'])->group(function () {
     Route::post('incomes', [OtherIncomeController::class,'store'])->name('incomes.store');
 
     Route::get('reports/monthly', [ReportController::class,'monthly'])->name('reports.monthly');
+
+    Route::resource('feeweeks', FeeWeekController::class)->only(['index','edit','update']);
 
     
 });
