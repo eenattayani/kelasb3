@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class TransactionController extends Controller
 {
@@ -59,17 +61,37 @@ class TransactionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Transaction $transaction)
     {
-        //
+        return view('admin.transactions.edit', compact('transaction'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Transaction $transaction)
     {
-        //
+        $request->validate([
+            'type' => 'required|in:income,expense',
+            'description' => 'required|string|max:255',
+            'amount' => 'required|integer|min:0',
+            'date' => 'required|date',
+            'proof' => 'nullable|mimes:jpg,jpeg,png,pdf|max:2048',
+        ]);
+
+        $data = $request->only(['type','description','amount','date']);
+
+        if ($request->hasFile('proof')) {
+            // Hapus file lama kalau ada
+            if ($transaction->proof && Storage::disk('public')->exists($transaction->proof)) {
+                Storage::disk('public')->delete($transaction->proof);
+            }
+            $data['proof'] = $request->file('proof')->store('proofs', 'public');
+        }
+
+        $transaction->update($data);
+
+        return redirect()->route('transactions.index')->with('success', 'Transaksi berhasil diperbarui.');
     }
 
     /**
@@ -77,7 +99,12 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
+        // hapus file bukti kalau ada
+        if ($transaction->proof && Storage::disk('public')->exists($transaction->proof)) {
+            Storage::disk('public')->delete($transaction->proof);
+        }
         $transaction->delete();
+
         return back()->with('success', 'Transaksi dihapus.');
     }
 }

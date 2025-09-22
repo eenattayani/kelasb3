@@ -36,7 +36,7 @@ Route::middleware(['auth','role:parent,admin'])->group(function () {
     
     Route::resource('students', StudentController::class);
 
-    Route::resource('transactions', TransactionController::class)->only(['index', 'create', 'store', 'destroy']);
+    Route::resource('transactions', TransactionController::class);
 });
 
 // Route::get('/dashboard', function () {
