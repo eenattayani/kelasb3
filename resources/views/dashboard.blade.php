@@ -11,21 +11,21 @@
             {{-- Statistik Ringkas --}}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div class="bg-white shadow rounded-xl p-6 text-center">
-                    <p class="text-sm text-gray-500">Total Pemasukan Pekan Ini</p>
+                    <p class="text-sm text-gray-500">Total Pemasukan</p>
                     <p class="mt-2 text-2xl font-bold text-green-600">
-                        Rp{{ number_format($weekIncome, 0, ',', '.') }}
-                    </p>
-                </div>
-                <div class="bg-white shadow rounded-xl p-6 text-center">
-                    <p class="text-sm text-gray-500">Total Pemasukan Bulan Ini</p>
-                    <p class="mt-2 text-2xl font-bold text-blue-600">
-                        Rp{{ number_format($monthIncome, 0, ',', '.') }}
-                    </p>
-                </div>
-                <div class="bg-white shadow rounded-xl p-6 text-center">
-                    <p class="text-sm text-gray-500">Total Pemasukan Keseluruhan</p>
-                    <p class="mt-2 text-2xl font-bold text-purple-600">
                         Rp{{ number_format($totalIncome, 0, ',', '.') }}
+                    </p>
+                </div>
+                <div class="bg-white shadow rounded-xl p-6 text-center">
+                    <p class="text-sm text-gray-500">Total Pengeluaran</p>
+                    <p class="mt-2 text-2xl font-bold text-blue-600">
+                        Rp{{ number_format($totalOutcome, 0, ',', '.') }}
+                    </p>
+                </div>
+                <div class="bg-white shadow rounded-xl p-6 text-center">
+                    <p class="text-sm text-gray-500">Saldo Kas</p>
+                    <p class="mt-2 text-2xl font-bold text-purple-600">
+                        Rp{{ number_format($netIncome, 0, ',', '.') }}
                     </p>
                 </div>
             </div>

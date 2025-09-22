@@ -25,6 +25,10 @@ class DashboardController extends Controller
 
         $totalIncome = Payment::sum('amount') + OtherIncome::sum('amount');
 
+        $totalOutcome = Transaction::where('type', 'expense')->sum('amount');
+        
+        $netIncome = $totalIncome - $totalOutcome;
+
         // Ambil daftar pemasukan (misalnya 10 terakhir)
         $payments = Payment::with('student')->latest()->get(); //kode ini adalah untuk mengambil data payment beserta relasi studentnya 
 
@@ -51,6 +55,8 @@ class DashboardController extends Controller
             'weekIncome',
             'monthIncome',
             'totalIncome',
+            'totalOutcome',
+            'netIncome',
             'payments',
             'transactions'
         ));
