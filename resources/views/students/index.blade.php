@@ -1,6 +1,23 @@
 <x-app-layout>
     <div class="max-w-5xl mx-auto py-6">
-        <h1 class="text-2xl font-bold mb-4">Daftar Siswa Kelas B3</h1>
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-6">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">
+                    Laporan Iuran Komite Kelas B3
+                </h1>
+
+                <p class="text-sm text-gray-500">
+                    Periode Juli 2025 - Juni 2026
+                </p>
+            </div>
+
+            <div class="mt-3 md:mt-0">
+                <a href="{{ route('students.export.pdf') }}"
+                class="inline-flex items-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg shadow">
+                    📄 Export PDF
+                </a>
+            </div>
+        </div>
 
         {{-- <a href="{{ route('students.create') }}"
            class="px-4 py-2 bg-blue-600 text-white rounded-lg mb-4 inline-block">
@@ -13,54 +30,166 @@
             </div>
         @endif
 
-        <table class="w-full bg-white border border-gray-200 rounded-lg shadow">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-2 border">#</th>
-                    <th class="px-4 py-2 border">Nama Siswa</th>
-                    <th class="px-4 py-2 border">Orang Tua</th>
-                    <th class="px-4 py-2 border">Kelas</th>
-                    <th class="px-4 py-2 border">Total Iuran</th>
-                  @auth
-                    @if(auth()->user()->role === 'admin')
-                    <th class="px-4 py-2 border">Aksi</th>
-                    @endif
-                  @endauth
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($students as $student)
-                <tr>
-                    <td class="px-4 py-2 border text-center">{{ $loop->iteration }}</td>
-                    <td class="px-4 py-2 border">
-                        <a href="{{ route('students.show', ['student' => $student->id]) }}" class="text-blue-600 hover:underline">
-                            {{ $student->nama }}
-                        </a>
-                    </td>
-                    {{-- tampilkan nama dari user --}}
-                    <td class="px-4 py-2 border text-center">{{ $student->parent->name ?? 'N/A' }}</td>                    
-                    {{-- <td class="px-4 py-2 border text-center">{{ $student->parent_id }}</td> --}}
-                    <td class="px-4 py-2 border text-center">{{ $student->kelas }}</td>
-                    <td class="px-4 py-2 border text-center">
-                        Rp{{ number_format($student->payments_sum_amount ?? 0, 0, ',', '.') }}
-                    </td>
-                  @auth
-                    @if(auth()->user()->role === 'admin')
-                    <td class="px-4 py-2 border space-x-2 text-center">
-                        {{-- <a href="{{ route('students.edit', $student) }}" class="text-blue-600 cursor-not-allowed">Edit</a> --}}
-                        <a href="#" class="text-blue-600 cursor-not-allowed">Edit</a>
-                        <form action="{{ route('students.destroy', $student) }}" method="POST" class="inline"
-                              onsubmit="return confirm('Yakin hapus?')">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="text-red-600" disabled>Hapus</button>
-                        </form>
-                    </td>
-                    @endif
-                  @endauth
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div class="mb-4 flex justify-end">
+            <a href="{{ route('students.export.pdf') }}"
+            class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg">
+                📄 Export PDF
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+            <div class="bg-white rounded-xl shadow border p-5">
+                <div class="text-gray-500 text-sm">
+                    Jumlah Siswa
+                </div>
+
+                <div class="text-2xl font-bold text-indigo-600">
+                    {{ $students->count() }}
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow border p-5">
+                <div class="text-gray-500 text-sm">
+                    Total Iuran Terkumpul
+                </div>
+
+                <div class="text-2xl font-bold text-green-600">
+                    Rp{{ number_format($grandTotal,0,',','.') }}
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow border p-5">
+                <div class="text-gray-500 text-sm">
+                    Rata-rata per Siswa
+                </div>
+
+                <div class="text-2xl font-bold text-blue-600">
+                    Rp{{ number_format($students->count() ? $grandTotal / $students->count() : 0,0,',','.') }}
+                </div>
+            </div>
+
+        </div>
+
+        <div class="overflow-x-auto bg-white rounded-xl shadow border">
+
+            <table class="min-w-full text-sm">
+
+                <thead class="bg-indigo-600 text-white">
+
+                    <tr>
+
+                        <th class="px-3 py-3 border whitespace-nowrap">
+                            No
+                        </th>
+
+                        <th class="px-3 py-3 border whitespace-nowrap">
+                            Nama Siswa
+                        </th>
+
+                        @foreach($months as $month)
+
+                            <th class="px-3 py-3 border whitespace-nowrap text-center">
+                                {{ $month->translatedFormat('M y') }}
+                            </th>
+
+                        @endforeach
+
+                        <th class="px-3 py-3 border bg-green-700 whitespace-nowrap">
+                            Total
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+                    @foreach($students as $student)
+
+                    <tr class="hover:bg-gray-50">
+
+                        <td class="border px-3 py-2 text-center">
+                            {{ $loop->iteration }}
+                        </td>
+
+                        <td class="border px-3 py-2 whitespace-nowrap">
+
+                            <a href="{{ route('students.show',$student->id) }}"
+                            class="text-blue-600 hover:underline">
+
+                                {{ $student->nama }}
+
+                            </a>
+
+                        </td>
+
+                        @foreach($months as $month)
+
+                            @php
+                                $key = $month->format('Y-m');
+                                $amount = $student->monthly_totals[$key];
+                            @endphp
+
+                            <td class="border px-3 py-2 text-center">
+
+                                @if($amount > 0)
+
+                                    Rp{{ number_format($amount,0,',','.') }}
+
+                                @else
+
+                                    -
+
+                                @endif
+
+                            </td>
+
+                        @endforeach
+
+                        <td class="border px-3 py-2 text-center bg-green-50 font-bold text-green-700">
+
+                            Rp{{ number_format($student->grand_total,0,',','.') }}
+
+                        </td>
+
+                    </tr>
+
+                    @endforeach
+                    
+                    <tr class="bg-green-100 font-bold">
+
+                        <td colspan="2"
+                            class="border px-3 py-3 text-right">
+
+                            TOTAL
+
+                        </td>
+
+                        @foreach($months as $month)
+
+                            @php
+                                $key = $month->format('Y-m');
+                            @endphp
+
+                            <td class="border px-3 py-3 text-center">
+
+                                Rp{{ number_format($monthTotals[$key],0,',','.') }}
+
+                            </td>
+
+                        @endforeach
+
+                        <td class="border px-3 py-3 text-center text-green-800">
+
+                            Rp{{ number_format($grandTotal,0,',','.') }}
+
+                        </td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        
     </div>
 </x-app-layout>

@@ -37,6 +37,8 @@ Route::middleware(['auth','role:parent,admin'])->group(function () {
     Route::resource('students', StudentController::class);
 
     Route::resource('transactions', TransactionController::class);
+
+    Route::get('/students/export/pdf', [StudentController::class, 'exportPdf'])->name('students.export.pdf');
 });
 
 // Route::get('/dashboard', function () {
