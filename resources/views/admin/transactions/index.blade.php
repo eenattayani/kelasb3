@@ -3,9 +3,16 @@
         <h2 class="text-2xl font-bold mb-4">Daftar Transaksi</h2>
     @auth
         @if(auth()->user()->role === 'admin')
-        <a href="{{ route('transactions.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">+ Catat Transaksi</a>
+        <a href="{{ route('transactions.create') }}" class="bg-blue-500 text-white px-4 py-2 rounded">
+            + Catat Transaksi
+        </a>
         @endif
+
     @endauth
+        
+        <a href="{{ route('transactions.export.pdf') }}" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">
+            📄 Export PDF
+        </a>
 
         <table class="w-full mt-4 border">
             <thead class="bg-gray-100">

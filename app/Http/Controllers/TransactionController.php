@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class TransactionController extends Controller
@@ -106,5 +107,30 @@ class TransactionController extends Controller
         $transaction->delete();
 
         return back()->with('success', 'Transaksi dihapus.');
+    }
+
+    public function exportPdf()
+    {
+        $transactions = Transaction::orderBy('date')->get();
+
+        $totalExpense = $transactions
+            ->where('type', 'expense')
+            ->sum('amount');
+
+        $pdf = Pdf::loadView(
+            'admin.transactions.pdf',
+            compact(
+                'transactions',
+                'totalExpense'
+            )
+        );
+
+        $pdf->setPaper('a4', 'portrait');
+
+        return $pdf->download(
+            'Laporan-Pengeluaran-Komite-' .
+            now()->format('Ymd') .
+            '.pdf'
+        );
     }
 }

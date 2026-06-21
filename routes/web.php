@@ -26,6 +26,7 @@ Route::middleware(['auth','role:admin'])->group(function () {
 
     Route::resource('feeweeks', FeeWeekController::class)->only(['index','edit','update']);
 
+    Route::get('transactions/export/pdf', [TransactionController::class, 'exportPdf'])->name('transactions.export.pdf');
     
 });
 
